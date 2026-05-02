@@ -9,6 +9,7 @@ import com.yeoljeong.tripmate.response.ApiResponse;
 import com.yeoljeong.tripmate.response.constants.CommonSuccessCode;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +25,7 @@ public class RecordController {
   @PostMapping()
   public ApiResponse<FeedCreateResponse> createFeedData(
       @LoginUser UserContext userContext,
-      @ModelAttribute FeedCreateRequest request
+      @Validated @ModelAttribute FeedCreateRequest request
   ) {
     return ApiResponse.success(
         CommonSuccessCode.OK,

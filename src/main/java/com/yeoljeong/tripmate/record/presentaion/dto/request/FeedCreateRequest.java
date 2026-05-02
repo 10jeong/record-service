@@ -22,6 +22,8 @@ public class FeedCreateRequest {
 
   @NotNull
   private UUID planUnitId;
+
+  @NotEmpty
   private List<MultipartFile> originImages;
 
   @NotNull
