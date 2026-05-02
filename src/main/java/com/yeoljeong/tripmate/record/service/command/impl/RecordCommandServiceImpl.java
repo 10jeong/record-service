@@ -12,6 +12,7 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import java.time.LocalDataTime;
 
 @Service
 @RequiredArgsConstructor
@@ -21,7 +22,7 @@ public class RecordCommandServiceImpl implements RecordCommandService {
   private final RecordRepository recordRepository;
 
   private String uploadImage(MultipartFile image, UUID planUnitId, UUID userId) {
-    String fileName = "feed-" + planUnitId + "-" + userId + ".jpg";
+    String fileName = "feed-" + planUnitId + "-" + userId + "-" + LocalDataTime.now() + ".jpg";
     return storageClient.upload(image, fileName);
   }
 
