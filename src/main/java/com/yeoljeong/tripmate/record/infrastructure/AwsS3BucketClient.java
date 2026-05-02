@@ -24,7 +24,7 @@ public class AwsS3BucketClient implements StorageClient {
 
   @Override
   public String upload(MultipartFile file, String fileName) {
-    if (file.isEmpty()) {
+    if (file==null || file.isEmpty()) {
       throw new BusinessException(RecordErrorCode.IMAGE_EMPTY_ERROR);
     }
     try
