@@ -12,11 +12,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "p_feed")
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feed {
 
   @Id
@@ -39,4 +45,19 @@ public class Feed {
   @OneToMany(fetch = FetchType.LAZY)
   @JoinColumn(name = "feed_id")
   private List<FeedImage> feedImages;
+
+  public Feed(UUID userId, UUID planUnitId, String title, String description,
+      VisibilityType visibilityType) {
+    this.userId = userId;
+    this.planUnitId = planUnitId;
+    this.title = title;
+    this.description = description;
+    this.visibilityType = visibilityType;
+    this.feedImages = new ArrayList<>();
+  }
+
+  public static Feed create(UUID userId, UUID planUnitId, String title, String description,
+      VisibilityType visibilityType) {
+    return new Feed(userId, planUnitId, title, description, visibilityType);
+  }
 }
