@@ -1,6 +1,8 @@
 package com.yeoljeong.tripmate.record.domain.model;
 
+import com.yeoljeong.tripmate.domain.BaseAuditEntity;
 import com.yeoljeong.tripmate.record.domain.constants.VisibilityType;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -23,7 +25,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "p_feed")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Feed {
+public class Feed extends BaseAuditEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -42,7 +44,7 @@ public class Feed {
   @Enumerated(EnumType.STRING)
   private VisibilityType visibilityType;
 
-  @OneToMany(fetch = FetchType.LAZY)
+  @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "feed_id")
   private List<FeedImage> feedImages;
 
@@ -59,5 +61,13 @@ public class Feed {
   public static Feed create(UUID userId, UUID planUnitId, String title, String description,
       VisibilityType visibilityType) {
     return new Feed(userId, planUnitId, title, description, visibilityType);
+  }
+
+  public void updateFeedImages(FeedImage image) {
+    this.feedImages.add(image);
+  }
+
+  public List<String> getFeedImages() {
+    return feedImages.stream().map(FeedImage::getImageKey).toList();
   }
 }
