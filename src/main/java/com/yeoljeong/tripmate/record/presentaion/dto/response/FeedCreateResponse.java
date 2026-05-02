@@ -15,7 +15,7 @@ public record FeedCreateResponse(
     VisibilityType visibilityType,
     String title,
     String description,
-    LocalDateTime createAt
+    LocalDateTime createdAt
 ) {
 
   public static FeedCreateResponse from(FeedCreateResult result) {
@@ -26,6 +26,6 @@ public record FeedCreateResponse(
         .visibilityType(result.visibilityType())
         .title(result.title())
         .description(result.description())
-        .createAt(result.createAt()).build();
+        .createdAt(result.createdAt()).build();
   }
 }

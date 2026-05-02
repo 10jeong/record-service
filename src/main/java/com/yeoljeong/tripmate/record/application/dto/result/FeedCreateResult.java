@@ -15,7 +15,7 @@ public record FeedCreateResult(
     VisibilityType visibilityType,
     String title,
     String description,
-    LocalDateTime createAt
+    LocalDateTime createdAt
 ) {
 
   public static FeedCreateResult from(Feed feed) {
@@ -26,6 +26,6 @@ public record FeedCreateResult(
         .visibilityType(feed.getVisibilityType())
         .title(feed.getTitle())
         .description(feed.getDescription())
-        .createAt(feed.getCreatedAt()).build();
+        .createdAt(feed.getCreatedAt()).build();
   }
 }
