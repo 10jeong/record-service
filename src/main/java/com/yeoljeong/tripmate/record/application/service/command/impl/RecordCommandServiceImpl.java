@@ -12,12 +12,14 @@ import com.yeoljeong.tripmate.record.domain.model.Feed;
 import com.yeoljeong.tripmate.record.domain.model.FeedImage;
 import com.yeoljeong.tripmate.record.domain.repository.RecordRepository;
 import jakarta.transaction.Transactional;
-import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class RecordCommandServiceImpl implements RecordCommandService {
@@ -25,8 +27,8 @@ public class RecordCommandServiceImpl implements RecordCommandService {
   private final StorageClient storageClient;
   private final RecordRepository recordRepository;
 
-  private String uploadImage(MultipartFile image, UUID planUnitId, UUID userId) {
-    String fileName = "feed-" + planUnitId + "-" + userId + "-" + LocalDateTime.now() + ".jpg";
+  private String uploadImage(MultipartFile image, UUID planUnitId) {
+    String fileName = planUnitId + Base64.getDecoder().toString().substring(10) + ".jpg";
     return storageClient.upload(image, fileName);
   }
 
@@ -41,7 +43,7 @@ public class RecordCommandServiceImpl implements RecordCommandService {
 
     for (MultipartFile file : command.originImages()) {
       try {
-        String uploadUrl = uploadImage(file, command.planUnitId(), command.userId());
+        String uploadUrl = uploadImage(file, command.planUnitId());
         feed.updateFeedImages(new FeedImage(uploadUrl));
       } catch (Exception ignored) {
       }
