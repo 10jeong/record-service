@@ -1,6 +1,6 @@
 package com.yeoljeong.tripmate.record.presentaion.dto.response;
 
-import com.yeoljeong.tripmate.record.application.dto.result.FeedCreateResult;
+import com.yeoljeong.tripmate.record.application.dto.result.FeedDetailResult;
 import com.yeoljeong.tripmate.record.domain.constants.VisibilityType;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public record FeedCreateResponse(
+public record FeedDetailResponse(
     UUID planUnitId,
     UUID feedId,
     List<String> imageUrls,
@@ -18,8 +18,8 @@ public record FeedCreateResponse(
     LocalDateTime createdAt
 ) {
 
-  public static FeedCreateResponse from(FeedCreateResult result) {
-    return FeedCreateResponse.builder()
+  public static FeedDetailResponse from(FeedDetailResult result) {
+    return FeedDetailResponse.builder()
         .planUnitId(result.planUnitId())
         .feedId(result.feedId())
         .imageUrls(result.imageUrls())
