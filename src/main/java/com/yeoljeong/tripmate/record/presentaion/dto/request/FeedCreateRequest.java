@@ -14,9 +14,9 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
-@Data // Getter, Setter 포함
+@Data
 @Builder
-@NoArgsConstructor // @ModelAttribute를 위해 필수
+@NoArgsConstructor
 @AllArgsConstructor
 
 public class FeedCreateRequest {
@@ -24,7 +24,6 @@ public class FeedCreateRequest {
   @NotNull
   private UUID planUnitId;
 
-  @NotEmpty
   private List<MultipartFile> originImages;
 
   @NotNull
