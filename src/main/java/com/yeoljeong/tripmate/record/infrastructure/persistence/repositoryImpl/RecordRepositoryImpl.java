@@ -51,6 +51,7 @@ public class RecordRepositoryImpl implements RecordRepository {
           cb.equal(visibility, VisibilityType.PRIVATE),
           cb.equal(root.get("userId"), userId)
       );
+      predicates.add(cb.isFalse(root.get("isDeleted")));
 
       predicates.add(cb.or(
           publicFeed,
