@@ -1,16 +1,16 @@
-package com.yeoljeong.tripmate.record.service.command.impl;
+package com.yeoljeong.tripmate.record.application.service.command.impl;
 
 import com.yeoljeong.tripmate.exception.BusinessException;
 import com.yeoljeong.tripmate.record.application.client.StorageClient;
 import com.yeoljeong.tripmate.record.application.dto.command.FeedCreateCommand;
 import com.yeoljeong.tripmate.record.application.dto.command.FeedVisibilityCommand;
 import com.yeoljeong.tripmate.record.application.dto.result.FeedBaseResult;
-import com.yeoljeong.tripmate.record.application.dto.result.FeedCreateResult;
+import com.yeoljeong.tripmate.record.application.dto.result.FeedDetailResult;
+import com.yeoljeong.tripmate.record.application.service.command.RecordCommandService;
 import com.yeoljeong.tripmate.record.domain.exception.RecordErrorCode;
 import com.yeoljeong.tripmate.record.domain.model.Feed;
 import com.yeoljeong.tripmate.record.domain.model.FeedImage;
 import com.yeoljeong.tripmate.record.domain.repository.RecordRepository;
-import com.yeoljeong.tripmate.record.service.command.RecordCommandService;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -31,7 +31,7 @@ public class RecordCommandServiceImpl implements RecordCommandService {
   }
 
   @Transactional
-  public FeedCreateResult createFeedImage(FeedCreateCommand command) {
+  public FeedDetailResult createFeedImage(FeedCreateCommand command) {
     Feed feed = Feed.create(
         command.userId(),
         command.planUnitId(),
@@ -46,7 +46,7 @@ public class RecordCommandServiceImpl implements RecordCommandService {
       } catch (Exception ignored) {
       }
     }
-    return FeedCreateResult.from(recordRepository.saveForFeed(feed));
+    return FeedDetailResult.from(recordRepository.saveForFeed(feed));
   }
 
   @Override
