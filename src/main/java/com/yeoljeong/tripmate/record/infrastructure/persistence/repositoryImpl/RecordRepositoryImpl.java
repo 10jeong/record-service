@@ -63,4 +63,9 @@ public class RecordRepositoryImpl implements RecordRepository {
     };
     return feedJpaRepository.findAll(specification);
   }
+
+  @Override
+  public List<Feed> findFeedListByUserId(UUID userId) {
+    return feedJpaRepository.findAllByUserIdAndIsDeletedIsFalse(userId);
+  }
 }
