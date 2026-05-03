@@ -5,5 +5,7 @@ import java.util.UUID;
 
 public interface RecordQueryService {
 
-  FeedListResult getFeedListDataByPlan(UUID uuid, UUID planUnitId);
+  FeedListResult getFeedListDataByPlan(UUID userId, UUID planUnitId);
+
+  FeedListResult getMyFeedList(UUID userId);
 }

@@ -75,4 +75,18 @@ public class RecordController {
             )
         ));
   }
+
+  @GetMapping("/me")
+  public ApiResponse<FeedListResponse> getMyFeedList(
+      @LoginUser UserContext userContext
+  ) {
+    return ApiResponse.success(
+        CommonSuccessCode.OK,
+        FeedListResponse.from(
+            recordQueryService.getMyFeedList(
+                UUID.fromString(userContext.userId())
+            )
+        )
+    );
+  }
 }
