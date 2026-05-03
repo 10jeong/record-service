@@ -6,15 +6,12 @@ import feign.FeignException;
 import java.util.Objects;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class PlanAdapter implements PlanClient {
 
-  private static final Logger log = LogManager.getLogger(PlanAdapter.class);
   private final PlanFeignClient planFeignClient;
 
   @Override
