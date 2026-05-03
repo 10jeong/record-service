@@ -29,9 +29,7 @@ public class PlanAdapter implements PlanClient {
           && Objects.equals(planParticipationResponse.status(), "JOINED")) {
         return true;
       }
-      log.info(planParticipationResponse);
     } catch (FeignException e) {
-      log.info(e.getMessage());
       return false;
     }
     return false;
