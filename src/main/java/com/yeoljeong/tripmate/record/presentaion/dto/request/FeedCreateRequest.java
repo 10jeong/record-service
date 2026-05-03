@@ -3,7 +3,6 @@ package com.yeoljeong.tripmate.record.presentaion.dto.request;
 import com.yeoljeong.tripmate.record.application.dto.command.FeedCreateCommand;
 import com.yeoljeong.tripmate.record.domain.constants.VisibilityType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
@@ -24,6 +23,7 @@ public class FeedCreateRequest {
   @NotNull
   private UUID planUnitId;
 
+  @NotNull
   private List<MultipartFile> originImages;
 
   @NotNull
