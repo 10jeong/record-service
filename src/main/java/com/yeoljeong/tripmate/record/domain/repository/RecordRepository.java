@@ -12,4 +12,6 @@ public interface RecordRepository {
   Optional<Feed> findFeedDataById(UUID feedId);
 
   List<Feed> findFeedListByCondition(UUID userId, UUID planUnitId, boolean isPlanUnitMember);
+
+  List<Feed> findFeedListByUserId(UUID userId);
 }
