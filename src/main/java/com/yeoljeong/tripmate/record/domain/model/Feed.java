@@ -70,4 +70,8 @@ public class Feed extends BaseAuditEntity {
   public List<String> getFeedImages() {
     return feedImages.stream().map(FeedImage::getImageKey).toList();
   }
+
+  public void updateVisibility(VisibilityType visibilityType) {
+    this.visibilityType = visibilityType;
+  }
 }

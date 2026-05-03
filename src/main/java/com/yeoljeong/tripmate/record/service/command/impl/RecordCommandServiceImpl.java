@@ -1,18 +1,22 @@
 package com.yeoljeong.tripmate.record.service.command.impl;
 
+import com.yeoljeong.tripmate.exception.BusinessException;
 import com.yeoljeong.tripmate.record.application.client.StorageClient;
 import com.yeoljeong.tripmate.record.application.dto.command.FeedCreateCommand;
+import com.yeoljeong.tripmate.record.application.dto.command.FeedVisibilityCommand;
+import com.yeoljeong.tripmate.record.application.dto.result.FeedBaseResult;
 import com.yeoljeong.tripmate.record.application.dto.result.FeedCreateResult;
+import com.yeoljeong.tripmate.record.domain.exception.RecordErrorCode;
 import com.yeoljeong.tripmate.record.domain.model.Feed;
 import com.yeoljeong.tripmate.record.domain.model.FeedImage;
 import com.yeoljeong.tripmate.record.domain.repository.RecordRepository;
 import com.yeoljeong.tripmate.record.service.command.RecordCommandService;
 import jakarta.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import java.time.LocalDataTime;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +26,7 @@ public class RecordCommandServiceImpl implements RecordCommandService {
   private final RecordRepository recordRepository;
 
   private String uploadImage(MultipartFile image, UUID planUnitId, UUID userId) {
-    String fileName = "feed-" + planUnitId + "-" + userId + "-" + LocalDataTime.now() + ".jpg";
+    String fileName = "feed-" + planUnitId + "-" + userId + "-" + LocalDateTime.now() + ".jpg";
     return storageClient.upload(image, fileName);
   }
 
@@ -43,5 +47,17 @@ public class RecordCommandServiceImpl implements RecordCommandService {
       }
     }
     return FeedCreateResult.from(recordRepository.saveForFeed(feed));
+  }
+
+  @Override
+  public FeedBaseResult updateFeedVisibility(FeedVisibilityCommand command) {
+    Feed feed = recordRepository.findFeedDataById(command.feedId()).orElseThrow(
+        () -> new BusinessException(RecordErrorCode.FEED_NOT_FOUND));
+    if (!feed.getUserId().equals(command.userId())) {
+      throw new BusinessException(RecordErrorCode.FEED_NOT_ACCESSIBLE);
+    }
+
+    feed.updateVisibility(command.visibilityType());
+    return FeedBaseResult.from(recordRepository.saveForFeed(feed));
   }
 }
