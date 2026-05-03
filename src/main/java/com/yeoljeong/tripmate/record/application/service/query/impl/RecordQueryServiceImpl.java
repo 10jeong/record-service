@@ -16,6 +16,7 @@ public class RecordQueryServiceImpl implements RecordQueryService {
   private final RecordRepository recordRepository;
 
   @Override
+  @Transactional(readOnly = true)
   public FeedListResult getFeedListDataByPlan(UUID userId, UUID planUnitId) {
     boolean isPlanUnitMember = planAdapter.validateGroupMember(userId, planUnitId);
     return FeedListResult.from(
