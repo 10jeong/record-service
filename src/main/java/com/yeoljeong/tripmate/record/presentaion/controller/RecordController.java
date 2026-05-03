@@ -3,15 +3,18 @@ package com.yeoljeong.tripmate.record.presentaion.controller;
 import com.yeoljeong.tripmate.auth.annotation.LoginUser;
 import com.yeoljeong.tripmate.auth.context.UserContext;
 import com.yeoljeong.tripmate.record.application.service.command.RecordCommandService;
+import com.yeoljeong.tripmate.record.application.service.query.RecordQueryService;
 import com.yeoljeong.tripmate.record.presentaion.dto.request.FeedCreateRequest;
 import com.yeoljeong.tripmate.record.presentaion.dto.request.FeedVisibilityRequest;
 import com.yeoljeong.tripmate.record.presentaion.dto.response.FeedBaseResponse;
 import com.yeoljeong.tripmate.record.presentaion.dto.response.FeedDetailResponse;
+import com.yeoljeong.tripmate.record.presentaion.dto.response.FeedListResponse;
 import com.yeoljeong.tripmate.response.ApiResponse;
 import com.yeoljeong.tripmate.response.constants.CommonSuccessCode;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RecordController {
 
   private final RecordCommandService recordCommandService;
+  private final RecordQueryService recordQueryService;
 
   @PostMapping()
   public ApiResponse<FeedDetailResponse> createFeedData(
@@ -55,5 +59,20 @@ public class RecordController {
             )
         )
     );
+  }
+
+  @GetMapping("/{planUnitId}")
+  public ApiResponse<FeedListResponse> getFeedListDataByPlan(
+      @LoginUser UserContext userContext,
+      @PathVariable UUID planUnitId
+  ) {
+    return ApiResponse.success(
+        CommonSuccessCode.OK,
+        FeedListResponse.from(
+            recordQueryService.getFeedListDataByPlan(
+                UUID.fromString(userContext.userId()),
+                planUnitId
+            )
+        ));
   }
 }
