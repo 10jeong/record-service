@@ -22,6 +22,9 @@ public class PlanAdapter implements PlanClient {
     try {
       PlanParticipationResponse planParticipationResponse = planFeignClient.getPlanParticipation(
           planUnitId, userId);
+      if (planParticipationResponse == null) {
+        return false;
+      }
       if (Objects.equals(planParticipationResponse.userId(), userId)
           && Objects.equals(planParticipationResponse.status(), "JOINED")) {
         return true;
