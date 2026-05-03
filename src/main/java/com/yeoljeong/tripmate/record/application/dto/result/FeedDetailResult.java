@@ -8,7 +8,7 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public record FeedCreateResult(
+public record FeedDetailResult(
     UUID planUnitId,
     UUID feedId,
     List<String> imageUrls,
@@ -18,8 +18,8 @@ public record FeedCreateResult(
     LocalDateTime createdAt
 ) {
 
-  public static FeedCreateResult from(Feed feed) {
-    return FeedCreateResult.builder()
+  public static FeedDetailResult from(Feed feed) {
+    return FeedDetailResult.builder()
         .planUnitId(feed.getPlanUnitId())
         .feedId(feed.getId())
         .imageUrls(feed.getFeedImages())
