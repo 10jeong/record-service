@@ -40,7 +40,7 @@ public class RecordController {
         CommonSuccessCode.OK,
         FeedDetailResponse.from(
             recordCommandService.createFeedImage(
-                request.toCommand(UUID.fromString(userContext.userId()))
+                request.toCommand(userContext.userId())
             ))
     );
   }
@@ -55,7 +55,7 @@ public class RecordController {
         CommonSuccessCode.OK,
         FeedBaseResponse.from(
             recordCommandService.updateFeedVisibility(
-                request.toCommand(UUID.fromString(userContext.userId()), feedId)
+                request.toCommand(userContext.userId(), feedId)
             )
         )
     );
@@ -70,7 +70,7 @@ public class RecordController {
         CommonSuccessCode.OK,
         FeedListResponse.from(
             recordQueryService.getFeedListDataByPlan(
-                UUID.fromString(userContext.userId()),
+                userContext.userId(),
                 planUnitId
             )
         ));
@@ -84,7 +84,7 @@ public class RecordController {
         CommonSuccessCode.OK,
         FeedListResponse.from(
             recordQueryService.getMyFeedList(
-                UUID.fromString(userContext.userId())
+                userContext.userId()
             )
         )
     );
