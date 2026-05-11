@@ -9,3 +9,4 @@ spring:
       - db
       - eureka
       - aws
+    active: local
