@@ -1,0 +1,40 @@
+server:
+  port: ${SERVICE_PORT}
+eureka:
+  client:
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URL}
+      fetch-registry: true
+      prefer-ip-address: true
+  instance:
+    hostname: ${EUREKA_INSTANCE_NAME}
+    non-secure-port: 80
+spring:
+  application:
+    name: record-service
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/postgres
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: record_db
+  cloud:
+    aws:
+      credentials:
+        access-key: ${AWS_ACCESS_KEY}
+        secret-key: ${AWS_SECRET_KEY}
+      region:
+        static: ${AWS_S3_REGION}
+      s3:
+        bucket: ${AWS_S3_BUCKET}
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+
