@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'sunsik17/tripmate-notification'
+        DOCKER_IMAGE = 'sunsik17/tripmate-record'
         DOCKER_TAG = 'latest'
         RECORD_EC2_IP = '172.31.43.83'
         PEM_PATH = '/var/lib/jenkins/tripmate.pem'
