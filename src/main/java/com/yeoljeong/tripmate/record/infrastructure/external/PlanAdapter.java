@@ -26,7 +26,7 @@ public class PlanAdapter implements PlanClient {
         return false;
       }
       if (Objects.equals(planParticipationResponse.userId(), userId)
-          && Objects.equals(planParticipationResponse.status(), "JOINED")) {
+          && Objects.equals(planParticipationResponse.status(), "APPROVED")) {
         return true;
       }
     } catch (FeignException e) {
