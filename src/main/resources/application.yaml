@@ -1,0 +1,11 @@
+server:
+  port: ${SERVICE_PORT}
+
+spring:
+  application:
+    name: record-service
+  profiles:
+    include:
+      - db
+      - eureka
+      - aws

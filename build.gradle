@@ -1,12 +1,12 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '4.0.5'
+    id 'org.springframework.boot' version '3.5.13'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.yeoljeong'
 version = '0.0.1-SNAPSHOT'
-description = 'record-service'
+description = 'notification'
 
 java {
     toolchain {
@@ -16,19 +16,38 @@ java {
 
 repositories {
     mavenCentral()
+
+    maven {
+        name = "GithubPackages"
+        url = uri("https://maven.pkg.github.com/10jeong/common-module")
+        credentials {
+            username = System.getenv("GITHUB_USERNAME") ?: findProperty("githubUsername")
+            password = System.getenv("GITHUB_TOKEN") ?: findProperty("githubToken")
+        }
+    }
 }
 
 ext {
-    set('springCloudVersion', "2025.1.1")
+    set('springCloudVersion', "2025.0.2")
+    set('springCloudAwsVersion', "3.1.1")
 }
 
 dependencies {
+    implementation 'com.yeoljeong:common-module:0.0.8-SNAPSHOT'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
-    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
+    implementation 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    runtimeOnly 'org.postgresql:postgresql'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
+    implementation platform("io.awspring.cloud:spring-cloud-aws-dependencies:${springCloudAwsVersion}")
+    implementation 'io.awspring.cloud:spring-cloud-aws-starter-s3'
+
+    annotationProcessor 'org.projectlombok:lombok'
 }
 
 dependencyManagement {
