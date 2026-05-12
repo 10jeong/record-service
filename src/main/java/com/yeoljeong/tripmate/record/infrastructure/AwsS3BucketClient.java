@@ -9,6 +9,8 @@ import io.awspring.cloud.s3.S3Template;
 import java.io.IOException;
 import java.io.InputStream;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 @RequiredArgsConstructor
 public class AwsS3BucketClient implements StorageClient {
 
+  private static final Logger log = LogManager.getLogger(AwsS3BucketClient.class);
   private final S3Template s3Template;
 
   @Value("${spring.cloud.aws.s3.bucket}")
@@ -24,7 +27,7 @@ public class AwsS3BucketClient implements StorageClient {
 
   @Override
   public String upload(MultipartFile file, String fileName) {
-    if (file==null || file.isEmpty()) {
+    if (file == null || file.isEmpty()) {
       throw new BusinessException(RecordErrorCode.IMAGE_EMPTY_ERROR);
     }
     try
@@ -32,6 +35,7 @@ public class AwsS3BucketClient implements StorageClient {
       S3Resource resource = s3Template.upload(bucketName, fileName, is);
       return resource.getURL().toString();
     } catch (IOException | S3Exception e) {
+      log.error("이미지 업로드 중에 에러가 발생하였습니다.", e);
       throw new BusinessException(RecordErrorCode.IMAGE_UPLOAD_ERROR);
     }
   }
