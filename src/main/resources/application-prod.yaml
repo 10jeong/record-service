@@ -32,9 +32,6 @@ spring:
         default_schema: record_db
   cloud:
     aws:
-      credentials:
-        access-key: ${AWS_ACCESS_KEY}
-        secret-key: ${AWS_SECRET_KEY}
       region:
         static: ${AWS_S3_REGION}
       s3:
