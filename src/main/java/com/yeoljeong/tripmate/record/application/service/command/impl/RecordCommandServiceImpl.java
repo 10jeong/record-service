@@ -12,7 +12,6 @@ import com.yeoljeong.tripmate.record.domain.model.Feed;
 import com.yeoljeong.tripmate.record.domain.model.FeedImage;
 import com.yeoljeong.tripmate.record.domain.repository.RecordRepository;
 import jakarta.transaction.Transactional;
-import java.util.Base64;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,8 +26,8 @@ public class RecordCommandServiceImpl implements RecordCommandService {
   private final StorageClient storageClient;
   private final RecordRepository recordRepository;
 
-  private String uploadImage(MultipartFile image, UUID planUnitId) {
-    String fileName = planUnitId + Base64.getDecoder().toString().substring(10) + ".jpg";
+  private String uploadImage(MultipartFile image) {
+    String fileName = UUID.randomUUID() + ".jpg";
     return storageClient.upload(image, fileName);
   }
 
@@ -43,7 +42,7 @@ public class RecordCommandServiceImpl implements RecordCommandService {
 
     for (MultipartFile file : command.originImages()) {
       try {
-        String uploadUrl = uploadImage(file, command.planUnitId());
+        String uploadUrl = uploadImage(file);
         feed.updateFeedImages(new FeedImage(uploadUrl));
       } catch (Exception ignored) {
       }
