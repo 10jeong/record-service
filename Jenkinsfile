@@ -60,7 +60,7 @@ pipeline {
                                 --name ${CONTAINER_NAME} \
                                 --env-file /home/g0000yuyu510/.env \
                                 -e SPRING_PROFILES_ACTIVE=prod \
-                                -p 8080:8080 \
+                                -p 8081:8080 \
                                 ${DOCKER_IMAGE}:${DOCKER_TAG}
                         "
                     """
