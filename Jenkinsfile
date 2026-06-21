@@ -6,11 +6,10 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = 'sunsik17/tripmate-notification'
+        DOCKER_IMAGE = 'yujsong/tripmate-record'
         DOCKER_TAG = 'latest'
-        CONTAINER_NAME = 'notification-service'
-        RECORD_EC2_IP = '172.31.43.83'
-        PEM_PATH = '/var/lib/jenkins/tripmate.pem'
+        CONTAINER_NAME = 'notification-record'
+        TARGET_SERVER_IP = '10.0.0.2'
     }
 
     stages {
@@ -23,9 +22,9 @@ pipeline {
         stage('Build') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'github-token',
-                    usernameVariable: 'GITHUB_USERNAME',
-                    passwordVariable: 'GITHUB_TOKEN'
+                        credentialsId: 'github-token',
+                        usernameVariable: 'GITHUB_USERNAME',
+                        passwordVariable: 'GITHUB_TOKEN'
                 )]) {
                     sh 'chmod +x gradlew'
                     sh './gradlew clean build -x test'
@@ -36,9 +35,9 @@ pipeline {
         stage('Docker Build & Push') {
             steps {
                 withCredentials([usernamePassword(
-                    credentialsId: 'docker-account',
-                    usernameVariable: 'DOCKER_USERNAME',
-                    passwordVariable: 'DOCKER_PASSWORD'
+                        credentialsId: 'docker-token',
+                        usernameVariable: 'DOCKER_USERNAME',
+                        passwordVariable: 'DOCKER_PASSWORD'
                 )]) {
                     sh """
                         docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
@@ -51,32 +50,37 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh """
-                    ssh -i ${PEM_PATH} -o StrictHostKeyChecking=no ec2-user@${RECORD_EC2_IP} '
-                        docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
-                        docker stop record-service || true
-                        docker rm record-service || true
-                        docker run -d \\
-                            --name record-service \\
-                            --env-file /home/ec2-user/.env \\
-                            -p 8080:8080 \\
-                            ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    '
-                """
+                sshagent(credentials: ['gcp-ssh-key']) {
+                    sh """
+                        ssh -o StrictHostKeyChecking=no g0000yuyu510@${TARGET_SERVER_IP} "
+                            docker pull ${DOCKER_IMAGE}:${DOCKER_TAG}
+                            docker stop ${CONTAINER_NAME} || true
+                            docker rm ${CONTAINER_NAME} || true
+                            docker run -d \
+                                --name ${CONTAINER_NAME} \
+                                --env-file /home/g0000yuyu510/.env \
+                                -e SPRING_PROFILES_ACTIVE=prod \
+                                -p 8080:8080 \
+                                ${DOCKER_IMAGE}:${DOCKER_TAG}
+                        "
+                    """
+                }
             }
         }
     }
 
     post {
-      always {
-          cleanWs()
-          sh 'docker system prune -f'
-      }
-      success {
-          echo 'Deploy succeeded'
-      }
-      failure {
-          echo 'Deploy failed'
-      }
+        always {
+            catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                cleanWs()
+            }
+            sh 'docker system prune -f'
+        }
+        success {
+            echo 'Deploy succeeded'
+        }
+        failure {
+            echo 'Deploy failed'
+        }
     }
 }
