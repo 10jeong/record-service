@@ -8,7 +8,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'yujsong/tripmate-record-service'
         DOCKER_TAG = 'latest'
-        CONTAINER_NAME = 'notification-record-service'
+        CONTAINER_NAME = 'record-service'
         TARGET_SERVER_IP = '10.0.0.2'
     }
 
@@ -58,9 +58,13 @@ pipeline {
                             docker rm ${CONTAINER_NAME} || true
                             docker run -d \
                                 --name ${CONTAINER_NAME} \
+                                --network host \
                                 --env-file /home/g0000yuyu510/.env \
                                 -e SPRING_PROFILES_ACTIVE=prod \
-                                -p 8081:8080 \
+                                -e EUREKA_INSTANCE_PREFER_IP_ADDRESS=true \
+                                -e EUREKA_INSTANCE_NON_SECURE_PORT='\\\${server.port}' \
+                                -e EUREKA_INSTANCE_INSTANCE_ID='\\\${spring.application.name}:\\\${server.port}:\\\${random.value}' \
+                                --restart always \
                                 ${DOCKER_IMAGE}:${DOCKER_TAG}
                         "
                     """
